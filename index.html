@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="search_div">
+            <input type="text" name="" id="city_name" placeholder="Enter the City Name" spellcheck="false">
+            <button type="button" onclick="check_weather()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <div id="weather_report_div">
+            <section id="weather_report">
+                <img src="weather-app-img/clear.png" alt="Clear Weather" id="weather_img">
+                <div class="degree_div">
+                    <h1 id="temp">30 <sup>o</sup>C</h1>
+                    <h2 id="city">Tiruppur</h2>
+                </div>
+                <div class="others_div">
+                    <div class="humidity_div">
+                        <img src="weather-app-img/humidity.png" alt="Humidity">
+                        <p id="humidity">48% <br> Humidity</p>
+                    </div>
+                    <div class="wind_div">
+                        <img src="weather-app-img/wind.png" alt="Wind speed Img">
+                        <p id="wind_speed">20 km/h <br> Wind Speed</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+
+<script>
+    const api_key = '83cd55c8af1a00396a073df6ad54d0b3';
+    const api_link = 'https://api.openweathermap.org/data/2.5/weather?units=metric&q=';
+
+
+    async function check_weather() {
+        const city_name = document.getElementById('city_name').value;
+        const response = await fetch(api_link + city_name + `&appid=${api_key}`);
+
+        let data = await response.json();
+
+        if (data.cod === '404') {
+            alert('Invalid City Name');
+            return;
+        }
+
+        document.getElementById('city').innerHTML = data.name;
+        document.getElementById('temp').innerHTML = Math.round(data.main.temp) + ' <sup>o</sup>C';
+        document.getElementById('wind_speed').innerHTML = data.wind.speed + ' km/h <br> Wind Speed';
+        document.getElementById('humidity').innerHTML = data.main.humidity + '% <br> Humidity';
+
+        if (data.weather[0].main === 'Clear') {
+            document.getElementById('weather_img').src = 'weather-app-img/clear.png';
+        }
+        else if (data.weather[0].main === 'Clouds') {
+            document.getElementById('weather_img').src = 'weather-app-img/clouds.png';
+        }
+        else if (data.weather[0].main === 'Rain') {
+            document.getElementById('weather_img').src = 'weather-app-img/rain.png';
+        }
+        else if (data.weather[0].main === 'Drizzle') {
+            document.getElementById('weather_img').src = 'weather-app-img/drizzle.png';
+        }
+        else if (data.weather[0].main === 'Mist') {
+            document.getElementById('weather_img').src = 'weather-app-img/mist.png';
+        }
+        // console.log(data)
+
+        document.getElementById('weather_report_div').style.display = 'block';
+    }
+
+    // check_weather();
+</script>
+
+</html>
